@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Remote View</title>
+    <script src="https://socket.io"></script>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #f0f2f5; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: inline-block; margin-top: 30px; min-width: 250px; }
+        h2 { color: #e11d48; margin: 5px 0; font-size: 3rem; }
+        h3 { color: #2563eb; margin: 5px 0; font-size: 3rem; }
+        h4 { color: #059669; margin: 5px 0; font-size: 3rem; }
+        p { color: #555; font-size: 1.2rem; font-weight: bold; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Live Patient Monitor</h1>
+    <div class="card">
+        <p>Heart Rate</p>
+        <h2 id="bpm">-- BPM</h2>
+        
+        <p>Oxygen Saturation</p>
+        <h3 id="spo2">-- %</h3>
+
+        <p>Respiratory Rate</p>
+        <h4 id="resp">-- BrPM</h4>
+    </div>
+
+    <script>
+        const socket = io("http://192.168.56.1:4000");
+
+        socket.on("connect", () => console.log("Connected to server!"));
+
+        socket.on("phone_receive", (data) => {
+            document.getElementById("bpm").innerText = data.heartRate + " BPM";
+            document.getElementById("spo2").innerText = data.spo2 + " %";
+            document.getElementById("resp").innerText = data.respiratoryRate + " BrPM";
+        });
+    </script>
+</body>
+</html>
